@@ -108,7 +108,7 @@ class init {
     }
 
     class { 'python':
-        version    => '3.4.2',
+        version    => 'system',
         pip        => true,
         dev        => true,
         virtualenv => true,
@@ -117,7 +117,7 @@ class init {
 
     python::virtualenv { '/webapps/mysite':
         ensure       => present,
-        version      => '3.4.2',
+        version      => 'system',
         requirements => '/webapps/mysite/requirements.txt',
         systempkgs   => true,
         venv_dir     => '/webapps/mysite',
