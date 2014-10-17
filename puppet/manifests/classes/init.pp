@@ -18,19 +18,9 @@ class init {
     # Let's install the dependecies
     package {
         ["libjs-jquery", "libjs-jquery-ui", "iso-codes", "gcc", "gettext",
-            "bzr", "libpq-dev", "nginx", "supervisor", "sqlite3", "git",
-            "build-essential"]:
+            "bzr", "libpq-dev", "nginx", "supervisor", "build-essential"]:
         ensure => installed,
         require => Exec['update-apt'] # The system update needs to run first
-    }
-
-    # Let's install the project dependecies from pip
-    exec { "pip-install-requirements":
-        command => "sudo pip install -r /vagrant/requirements.txt",
-        tries => 2,
-        timeout => 600, # Too long, but this can take awhile
-        require => Package['python-pip', 'python-dev'], # The package dependecies needs to run first
-        logoutput => on_failure,
     }
 
     service { "nginx":
@@ -112,21 +102,13 @@ class init {
         require => User["mysite"],
     }
 
-    vcsrepo { "/webapps/mysite":
-        ensure   => present,
-        provider => git,
-        source   => "https://github.com/bedmiston/mysite.git",
-        user => 'mysite',
-        require => File["/webapps/mysite"],
-    }
-
     file { "/tmp/Puppetfile":
         mode   => 755,
         source => "puppet:////vagrant/puppet/Puppetfile",
     }
 
     class { 'python':
-        version    => 'system',
+        version    => '3.4.2',
         pip        => true,
         dev        => true,
         virtualenv => true,
@@ -135,7 +117,7 @@ class init {
 
     python::virtualenv { '/webapps/mysite':
         ensure       => present,
-        version      => 'system',
+        version      => '3.4.2',
         requirements => '/webapps/mysite/requirements.txt',
         systempkgs   => true,
         venv_dir     => '/webapps/mysite',
