@@ -11,9 +11,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   # config.vm.box = "puppetlabs-precise32"
+  # config.vm.box = "centos65-server"
   config.vm.box = "devserver"
   # config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-12042-x64-vbox4210.box"
   config.vm.box_url = "hashicorp/precise32"
+  config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-puppet.box"
   config.vm.network "forwarded_port", guest: 8000, host: 8000
   config.vm.network "private_network", ip: "33.33.33.10"
 
