@@ -5,13 +5,18 @@ class init {
     }
 
     # Let's update the system
-    exec { "update-apt":
-        command => "sudo apt-get update",
-    }
+    # exec { "update-apt":
+    #     command => "sudo apt-get update",
+    # }
 
-    exec { "upgrade-apt":
-        command => 'sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade',
-        require => Exec["update-apt"],
+    # exec { "upgrade-apt":
+    #     command => 'sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade',
+    #     require => Exec["update-apt"],
+    #     timeout => 1800,
+    # }
+
+    exec { "upgrade-yum":
+        command => 'sudo yum -y update',
         timeout => 1800,
     }
 
@@ -20,7 +25,8 @@ class init {
         ["libjs-jquery", "libjs-jquery-ui", "iso-codes", "gcc", "gettext",
             "bzr", "libpq-dev", "nginx", "supervisor", "build-essential"]:
         ensure => installed,
-        require => Exec['update-apt'] # The system update needs to run first
+        #require => Exec['update-apt'] # The system update needs to run first
+        require => Exec['upgrade-yum'] # The system update needs to run first
     }
 
     service { "nginx":

@@ -11,10 +11,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   # config.vm.box = "puppetlabs-precise32"
-  # config.vm.box = "centos65-server"
-  config.vm.box = "devserver"
+  config.vm.box = "centos65-devserver"
+  #config.vm.box = "devserver"
   # config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-12042-x64-vbox4210.box"
-  config.vm.box_url = "hashicorp/precise32"
+  # config.vm.box_url = "hashicorp/precise32"
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/centos-65-x64-virtualbox-puppet.box"
   config.vm.network "forwarded_port", guest: 8000, host: 8000
   config.vm.network "private_network", ip: "33.33.33.10"
@@ -26,25 +26,42 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 
 # Update puppet to latest version before using puppet provisioning.
-  $puppet_update_script = <<SCRIPT
-wget https://apt.puppetlabs.com/puppetlabs-release-precise.deb
-dpkg -i puppetlabs-release-precise.deb
-apt-get update
+#   $puppet_update_script_ubuntu = <<SCRIPT
+# wget https://apt.puppetlabs.com/puppetlabs-release-precise.deb
+# dpkg -i puppetlabs-release-precise.deb
+# apt-get update
+# puppet resource package puppet ensure=latest
+# apt-get install -y curl
+# SCRIPT
+
+  $puppet_update_script_centos = <<SCRIPT
+rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
+yum install -y puppet
 puppet resource package puppet ensure=latest
-apt-get install -y curl
+yum install -y curl
 SCRIPT
-  config.vm.provision :shell, :inline => $puppet_update_script
+
+  config.vm.provision :shell, :inline => $puppet_update_script_centos
   config.vm.provision :shell, :path => "install-rvm.sh",  :args => "stable"
   config.vm.provision :shell, :path => "install-ruby.sh", :args => "1.9.3"
 
-  $librarian_puppet_update_script = <<SCRIPT
-apt-get install -y gcc git build-essential
+#   $librarian_puppet_update_script_ubuntu = <<SCRIPT
+# apt-get install -y gcc git build-essential
+# gem install puppet -v 3.6 --no-rdoc --no-ri
+# gem install librarian-puppet -v 1.1.3 --no-rdoc --no-ri
+# cp /vagrant/puppet/Puppetfile /tmp
+# cd /tmp && librarian-puppet install --verbose
+# SCRIPT
+
+  $librarian_puppet_update_script_centos = <<SCRIPT
+yum install -y gcc git build-essential
 gem install puppet -v 3.6 --no-rdoc --no-ri
 gem install librarian-puppet -v 1.1.3 --no-rdoc --no-ri
 cp /vagrant/puppet/Puppetfile /tmp
 cd /tmp && librarian-puppet install --verbose
 SCRIPT
-  config.vm.provision :shell, :inline => $librarian_puppet_update_script
+
+  config.vm.provision :shell, :inline => $librarian_puppet_update_script_centos
 
   config.vm.provision :puppet do |puppet|
       puppet.manifests_path = "puppet/manifests"
