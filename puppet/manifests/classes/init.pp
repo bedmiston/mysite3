@@ -23,7 +23,7 @@ class init {
     # Let's install the dependecies
     package {
         ["libjs-jquery", "libjs-jquery-ui", "iso-codes", "gcc", "gettext",
-            "bzr", "libpq-dev", "nginx", "supervisor", "build-essential"]:
+            "bzr", "libpq-dev", "nginx", "supervisor"]:
         ensure => installed,
         #require => Exec['update-apt'] # The system update needs to run first
         require => Exec['upgrade-yum'] # The system update needs to run first

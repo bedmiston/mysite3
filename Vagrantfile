@@ -54,7 +54,7 @@ SCRIPT
 # SCRIPT
 
   $librarian_puppet_update_script_centos = <<SCRIPT
-yum install -y gcc git build-essential
+yum install -y gcc git
 gem install puppet -v 3.6 --no-rdoc --no-ri
 gem install librarian-puppet -v 1.1.3 --no-rdoc --no-ri
 cp /vagrant/puppet/Puppetfile /tmp
