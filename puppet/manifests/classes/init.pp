@@ -22,8 +22,7 @@ class init {
 
     # Let's install the dependecies
     package {
-        ["libjs-jquery", "libjs-jquery-ui", "iso-codes", "gcc", "gettext",
-            "bzr", "libpq-dev", "nginx", "supervisor"]:
+        ["nginx", "supervisor"]:
         ensure => installed,
         #require => Exec['update-apt'] # The system update needs to run first
         require => Exec['upgrade-yum'] # The system update needs to run first
@@ -44,25 +43,41 @@ class init {
         notify => Service['nginx']
     }
 
+    file { "/etc/nginx/sites-available":
+        ensure => directory,
+        owner => root,
+        group => root,
+        mode => 644,
+        #require => User["mysite"],
+    }
+
+    file { "/etc/nginx/sites-enabled":
+        ensure => directory,
+        owner => root,
+        group => root,
+        mode => 644,
+        #require => User["mysite"],
+    }
+
     file { "/etc/nginx/sites-available/vagrantsite":
         owner  => root,
         group  => root,
         mode   => 644,
         source => "puppet:////vagrant/puppet/files/vhost.conf",
-        require => Package['nginx'],
+        require => [ Package['nginx'], File['/etc/nginx/sites-available'] ],
         notify => Service['nginx']
     }
 
     file { "/etc/nginx/sites-enabled/vagrantsite":
         ensure => symlink,
         target => "/etc/nginx/sites-available/vagrantsite",
-        require => Package['nginx'],
+        require => [ Package['nginx'], File['/etc/nginx/sites-enabled'] ],
         notify => Service['nginx']
     }
 
     file { "/etc/nginx/sites-enabled/default":
         ensure => absent,
-        require => Package['nginx'],
+        require => [ Package['nginx'], File['/etc/nginx/sites-enabled'] ],
         notify => Service['nginx']
     }
 
