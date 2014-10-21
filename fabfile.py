@@ -6,11 +6,11 @@ from fabric.contrib.console import confirm
 def vagrant():
     # change from the default user to 'vagrant'
     env.user = 'vagrant'
-    env.site_user = 'mysite'
+    env.site_user = 'django'
     # connect to the port-forwarded ssh
     env.hosts = ['127.0.0.1:2222']
     # Set the site path
-    env.site_path = '/webapps/mysite/'
+    env.site_path = '/webapps/django/'
     env.vagrant_folder = '/vagrant/'
 
     # use vagrant ssh key

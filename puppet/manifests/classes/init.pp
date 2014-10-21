@@ -4,101 +4,9 @@ class init {
         ensure => "present",
     }
 
-    # Let's update the system
-    # exec { "update-apt":
-    #     command => "sudo apt-get update",
-    # }
-
-    # exec { "upgrade-apt":
-    #     command => 'sudo DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade',
-    #     require => Exec["update-apt"],
-    #     timeout => 1800,
-    # }
-
     exec { "upgrade-yum":
         command => 'sudo yum -y update',
         timeout => 1800,
-    }
-
-    # Let's install the dependecies
-    package {
-        ["nginx", "supervisor"]:
-        ensure => installed,
-        #require => Exec['update-apt'] # The system update needs to run first
-        require => Exec['upgrade-yum'] # The system update needs to run first
-    }
-
-    service { "nginx":
-        ensure => running,
-        hasrestart => true,
-        require => Package['nginx'],
-    }
-
-    file { "/etc/nginx/nginx.conf":
-        owner  => root,
-        group  => root,
-        mode   => 644,
-        source => "puppet:////vagrant/puppet/files/nginx.conf",
-        require => Package['nginx'],
-        notify => Service['nginx']
-    }
-
-    file { "/etc/nginx/sites-available":
-        ensure => directory,
-        owner => root,
-        group => root,
-        mode => 644,
-        #require => User["mysite"],
-    }
-
-    file { "/etc/nginx/sites-enabled":
-        ensure => directory,
-        owner => root,
-        group => root,
-        mode => 644,
-        #require => User["mysite"],
-    }
-
-    file { "/etc/nginx/sites-available/vagrantsite":
-        owner  => root,
-        group  => root,
-        mode   => 644,
-        source => "puppet:////vagrant/puppet/files/vhost.conf",
-        require => [ Package['nginx'], File['/etc/nginx/sites-available'] ],
-        notify => Service['nginx']
-    }
-
-    file { "/etc/nginx/sites-enabled/vagrantsite":
-        ensure => symlink,
-        target => "/etc/nginx/sites-available/vagrantsite",
-        require => [ Package['nginx'], File['/etc/nginx/sites-enabled'] ],
-        notify => Service['nginx']
-    }
-
-    file { "/etc/nginx/sites-enabled/default":
-        ensure => absent,
-        require => [ Package['nginx'], File['/etc/nginx/sites-enabled'] ],
-        notify => Service['nginx']
-    }
-
-    service { "supervisor":
-        ensure => running,
-        hasrestart => true,
-        require => Package['supervisor'],
-    }
-
-    file { "/etc/supervisor/conf.d/gunicorn.conf":
-        owner  => root,
-        group  => root,
-        mode   => 755,
-        source => "puppet:////vagrant/puppet/files/gunicorn-supervisord.conf",
-        require => Package['supervisor'],
-    } ->
-    exec { "reread_gunicorn":
-        command => "sudo supervisorctl reread"
-    } ->
-    exec { "start_gunicorn":
-        command => "sudo supervisorctl update"
     }
 
     group { "webapps":
@@ -106,10 +14,10 @@ class init {
         system => true,
     }
 
-    user { "mysite":
+    user { "django":
         ensure => present,
         system => true,
-        home => "/webapps/mysite",
+        home => "/webapps/django",
         shell => "/bin/bash",
         groups => webapps,
         require => Group["webapps"],
@@ -120,12 +28,7 @@ class init {
         owner => mysite,
         group => webapps,
         mode => 644,
-        require => User["mysite"],
-    }
-
-    file { "/tmp/Puppetfile":
-        mode   => 755,
-        source => "puppet:////vagrant/puppet/Puppetfile",
+        require => User["django"],
     }
 
     class { 'python':
@@ -136,29 +39,29 @@ class init {
         gunicorn   => false,
     }
 
-    python::virtualenv { '/webapps/mysite':
+    python::virtualenv { '/webapps/django':
         ensure       => present,
         version      => 'system',
-        requirements => '/webapps/mysite/requirements.txt',
+        requirements => '/webapps/django/requirements.txt',
         systempkgs   => true,
-        venv_dir     => '/webapps/mysite',
-        owner        => 'mysite',
+        venv_dir     => '/webapps/django',
+        owner        => 'django',
         group        => 'webapps',
-        cwd          => '/webapps/mysite',
+        cwd          => '/webapps/django',
         timeout      => 0,
     }
 
     class { 'postgresql::server':
     } ->
-    postgresql::server::role {'mysite':
-        password_hash => postgresql_password('mysite', '1234abcd'),
+    postgresql::server::role {'django':
+        password_hash => postgresql_password('django', '1234abcd'),
         createdb => true,
     } ->
-    postgresql::server::database { 'mysite':
+    postgresql::server::database { 'django':
     }->
-    postgresql::server::database_grant { 'mysite':
+    postgresql::server::database_grant { 'django':
         privilege => 'ALL',
-        db => 'mysite',
-        role => 'mysite',
+        db => 'django',
+        role => 'django',
     }
 }
