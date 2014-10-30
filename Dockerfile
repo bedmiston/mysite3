@@ -3,20 +3,14 @@ from ubuntu:14.04
 
 maintainer Reynolds
 
-#run echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/sources.list
 run apt-get update
 run apt-get install -y git build-essential
 run apt-get install -y python libpq-dev python-dev python-setuptools python-pip
 run apt-get install -y nginx supervisor
-#run easy_install pip
 
 # install uwsgi now because it takes a little while
 run pip install uwsgi
 
-# install nginx
-# run apt-get install -y python-software-properties
-# run apt-get update
-# RUN add-apt-repository -y ppa:nginx/stable
 run apt-get install -y sqlite3
 
 # install our code
