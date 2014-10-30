@@ -15,9 +15,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision "docker" do |d|
-    d.pull_images "paintedfox/postgresql"
-    d.run "paintedfox/postgresql",
-        args: "-e USER=root",
-        args: "-e PASS=abcdEF123456"
+    d.build_image "/vagrant",
+    args: '-t "djangoapp"'
+  end
+
+  # config.vm.provision "docker" do |d|
+  #   d.pull_images "paintedfox/postgresql"
+  # end
+
+  # config.vm.provision "docker" do |d|
+  #   d.run "paintedfox/postgresql",
+  #       args: "-e DB=django",
+  #       args: "-e USER=django",
+  #       args: "-e PASS=abcdEF123456"
+  # end
+
+  config.vm.provision "docker" do |d|
+    d.run "djangoapp"
   end
 end
