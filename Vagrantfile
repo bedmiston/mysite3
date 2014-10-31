@@ -14,7 +14,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
-  config.vm.provision :shell, :path => "install-django-vagrant.sh"
+  #config.vm.provision :shell, :path => "install-django-vagrant.sh"
 
   config.vm.provision "docker" do |d|
     d.build_image "/vagrant",
@@ -33,6 +33,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # end
 
   config.vm.provision "docker" do |d|
-    d.run "djangoapp"
+    d.run "djangoapp",
+    args: '--name djangoapp',
+    args: '-v /vagrant:/home/docker/test'
   end
 end
