@@ -15,10 +15,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision :shell, :path => "install-django-vagrant.sh"
 
-  config.vm.provision "docker" do |d|
-    d.build_image "/vagrant",
-    args: '-t "djangoapp"'
-  end
+  config.vm.provision "docker"
+  # config.vm.provision "docker" do |d|
+  #   d.build_image "/vagrant",
+  #   args: '-t "djangoapp"'
+  # end
 
   # config.vm.provision "docker" do |d|
   #   d.pull_images "paintedfox/postgresql"
@@ -31,9 +32,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #       args: "-e PASS=abcdEF123456"
   # end
 
-  config.vm.provision "docker" do |d|
-    d.run "djangoapp",
-    args: '--name djangoapp',
-    args: '-v /vagrant:/home/docker/test'
-  end
+  # config.vm.provision "docker" do |d|
+  #   d.run "djangoapp",
+  #   args: '--name djangoapp',
+  #   args: '-v /vagrant:/home/docker/test'
+  # end
 end
