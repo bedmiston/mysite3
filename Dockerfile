@@ -3,15 +3,12 @@ from ubuntu:14.04
 
 maintainer Reynolds
 
-run apt-get update
-run apt-get install -y git build-essential
-run apt-get install -y python libpq-dev python-dev python-setuptools python-pip
-run apt-get install -y nginx supervisor
+run apt-get update && run apt-get install -y git build-essential \
+python libpq-dev python-dev python-setuptools python-pip nginx supervisor \
+sqlite3
 
 # install uwsgi now because it takes a little while
 run pip install uwsgi
-
-run apt-get install -y sqlite3
 
 # install our code
 add . /home/docker/code/
