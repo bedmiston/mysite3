@@ -1,8 +1,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box_url = "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box"
-  config.vm.box = "phusiondevserver"
+  config.vm.box = "ubuntu/trusty64"
 
   config.vm.network :private_network, ip: "33.33.33.33"
   #config.vm.network :forwarded_port, guest: 8000, host: 8000
@@ -14,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
-  #config.vm.provision :shell, :path => "install-django-vagrant.sh"
+  config.vm.provision :shell, :path => "install-django-vagrant.sh"
 
   config.vm.provision "docker" do |d|
     d.build_image "/vagrant",

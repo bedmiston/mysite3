@@ -3,6 +3,8 @@
 apt-get update
 apt-get install -y git build-essential python libpq-dev python-dev python-setuptools python-pip
 pip install virtualenv
-virtualenv /vagrant
-source /vagrant/bin/activate
-pip install -r /vagrant/app/requirements.txt
+mkdir /reynolds
+virtualenv /reynolds
+cd /reynolds
+source /reynolds/bin/activate
+pip install -U fig
