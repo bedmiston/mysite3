@@ -2,4 +2,4 @@
 
 apt-get update
 apt-get install -y python-pip
-pip install -U fig
+pip install fig

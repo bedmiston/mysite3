@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
-  config.vm.provision "file", source: "bash_aliases", destination: ".bash_aliases"
+  config.vm.provision "file", source: "bash_aliases.sh", destination: ".bash_aliases"
 
   config.vm.provision :shell, :path => "install-fig.sh"
 
