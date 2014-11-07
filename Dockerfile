@@ -6,6 +6,9 @@ ENV USER django
 ENV GROUP webapps
 ENV CODE /webapps/django
 
+# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
+run groupadd --system $GROUP && useradd --system --gid $GROUP --shell /bin/bash --home $CODE $USER
+
 #run apt-get update && apt-get install -y git build-essential python libpq-dev \
 #python-dev python-setuptools python-pip nginx supervisor \
 #sqlite3
@@ -16,7 +19,6 @@ run apt-get update && apt-get install -y nano nginx supervisor \
 run pip install uwsgi
 
 # install our code
-run groupadd --system $GROUP && useradd --system --gid $GROUP --shell /bin/bash --home $CODE $USER
 add . $CODE
 run chown -R $USER:$GROUP $CODE
 run chmod -R g+w $CODE
