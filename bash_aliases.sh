@@ -2,7 +2,7 @@
 # Docker alias and function
 # ------------------------------------
 # Get latest container ID
-alias dl='docker ps -l -q'
+alias dl='docker ps -lq'
 # Get container process
 alias dps='docker ps'
 # Get process included stop container
@@ -28,4 +28,4 @@ dbu() { docker build -t=$1 .; }
 # Show all alias related docker
 dalias() { alias | grep 'docker' | sed "s/^\([^=]*\)=\(.*\)/\1 => \2/"| sed "s/['|\']//g" | sort; }
 # Run bash in an existing container
-db() { docker exec -it $1 /bin/bash }
+dba() { docker exec -it $1 /bin/bash; }
