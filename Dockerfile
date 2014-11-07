@@ -1,30 +1,36 @@
-
-from ubuntu:14.04
+from python:3.4
 
 maintainer Reynolds
 
-run apt-get update && run apt-get install -y git build-essential \
-python libpq-dev python-dev python-setuptools python-pip nginx supervisor \
-sqlite3
+ENV USER django
+ENV GROUP webapps
+ENV CODE /webapps/django
+
+#run apt-get update && apt-get install -y git build-essential python libpq-dev \
+#python-dev python-setuptools python-pip nginx supervisor \
+#sqlite3
+run apt-get update && apt-get install -y nano nginx supervisor \
+&& rm -rf /var/lib/apt/lists/* && apt-get autoremove -y && apt-get clean -y
 
 # install uwsgi now because it takes a little while
 run pip install uwsgi
 
 # install our code
-add . /home/docker/code/
+run groupadd --system $GROUP && useradd --system --gid $GROUP --shell /bin/bash --home $CODE $USER
+add . $CODE
+run chown -R $USER:$GROUP $CODE
+run chmod -R g+w $CODE
 
 # setup all the configfiles
 run echo "daemon off;" >> /etc/nginx/nginx.conf
 run rm /etc/nginx/sites-enabled/default
-run ln -s /home/docker/code/nginx-app.conf /etc/nginx/sites-enabled/
-run ln -s /home/docker/code/supervisor-app.conf /etc/supervisor/conf.d/
+run ln -s $CODE/nginx-app.conf /etc/nginx/sites-enabled/
+run ln -s $CODE/supervisor-app.conf /etc/supervisor/conf.d/
 
 # run pip install
-run pip install -r /home/docker/code/app/requirements.txt
+run pip install -r $CODE/app/requirements.txt
 
-# install django, normally you would remove this step because your project would already
-# be installed in the code/app/ directory
-# run django-admin.py startproject website /home/docker/code/app/
+WORKDIR $CODE
 
 expose 80
 cmd ["supervisord", "-n"]

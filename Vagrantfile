@@ -13,28 +13,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
-  config.vm.provision :shell, :path => "install-django-vagrant.sh"
+  config.vm.provision "file", source: "bash_aliases", destination: ".bash_aliases"
+
+  config.vm.provision :shell, :path => "install-fig.sh"
 
   config.vm.provision "docker"
-  # config.vm.provision "docker" do |d|
-  #   d.build_image "/vagrant",
-  #   args: '-t "djangoapp"'
-  # end
-
-  # config.vm.provision "docker" do |d|
-  #   d.pull_images "paintedfox/postgresql"
-  # end
-
-  # config.vm.provision "docker" do |d|
-  #   d.run "paintedfox/postgresql",
-  #       args: "-e DB=django",
-  #       args: "-e USER=django",
-  #       args: "-e PASS=abcdEF123456"
-  # end
-
-  # config.vm.provision "docker" do |d|
-  #   d.run "djangoapp",
-  #   args: '--name djangoapp',
-  #   args: '-v /vagrant:/home/docker/test'
-  # end
 end

@@ -74,3 +74,10 @@ def collectstatic():
     '''Collect static media.'''
     with cd(env.site_path):
         sudo('python manage.py collectstatic --noinput', user=env.site_user)
+
+
+def up():
+    '''Bring up the docker containers using fig'''
+    local('vagrant up')
+    with cd('/vagrant'):
+        run('fig up')

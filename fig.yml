@@ -1,0 +1,11 @@
+db:
+  image: postgres
+web:
+  build: .
+  volumes:
+    - .:/webapps/django
+  ports:
+    - "80:80"
+    - "8000:8000"
+  links:
+    - db
