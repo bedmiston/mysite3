@@ -1,5 +1,5 @@
 from __future__ import with_statement
-from fabric.api import env, local, settings, abort, run, cd, sudo
+from fabric.api import env, local, settings, abort, run, cd
 from fabric.contrib.console import confirm
 
 
@@ -27,7 +27,7 @@ def test():
 
 
 def commit():
-    local("git add -p && git commit")
+    local('git add -p && git commit')
 
 
 def push():
@@ -35,7 +35,7 @@ def push():
 
 
 def deploy():
-    '''Deploy the site.'''
+    """Deploy the site."""
     test()
     migrate()
     collectstatic()
@@ -43,36 +43,36 @@ def deploy():
 
 
 def uname():
-    '''Run uname on the server.'''
+    """Run uname on the server."""
     with cd(env.vagrant_folder):
         run('fig run web uname -a')
 
 
 def up():
-    '''Bring up the docker containers using fig'''
+    """Bring up the docker containers using fig"""
     with cd(env.vagrant_folder):
-        run('fig up')
+        run("fig up -d")
 
 
 def collectstatic():
-    '''Collect static media.'''
+    """Collect static media."""
     with cd(env.vagrant_folder):
         run('fig run web python app/manage.py collectstatic --noinput')
 
 
 def syncdb():
-    '''Sync the database.'''
+    """Sync the database."""
     with cd(env.vagrant_folder):
         run('fig run web python app/manage.py syncdb')
 
 
 def migrate():
-    '''Run migrate on the db'''
+    """Run migrate on the db"""
     with cd(env.vagrant_folder):
         run('fig run web python app/manage.py migrate')
 
 
 def restart():
-    '''Restart the web app'''
+    """Restart the web app"""
     with cd(env.vagrant_folder):
         run('fig restart web')

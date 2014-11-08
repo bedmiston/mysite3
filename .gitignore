@@ -71,3 +71,6 @@ Puppetfile.lock
 *.deb
 .tmp/
 modules/
+
+# PyCHarm
+.idea/
