@@ -78,6 +78,17 @@ def collectstatic():
 
 def up():
     '''Bring up the docker containers using fig'''
-    local('vagrant up')
-    with cd('/vagrant'):
+    with cd(env.vagrant_folder):
         run('fig up')
+
+
+def migrate():
+    '''Run migrate on the db'''
+    with cd(env.vagrant_folder):
+        run('fig run web python app/manage.py migrate')
+
+
+def restart():
+    '''Restart the web app'''
+    with cd(env.vagrant_folder):
+        run('fig restart web')
