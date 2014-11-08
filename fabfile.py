@@ -3,7 +3,7 @@ from fabric.api import env, local, settings, abort, run, cd, sudo
 from fabric.contrib.console import confirm
 
 
-def vagrant():
+def v():
     # change from the default user to 'vagrant'
     env.user = 'vagrant'
     env.site_user = 'django'
@@ -21,7 +21,7 @@ def vagrant():
 def test():
     with cd('/vagrant/'):
         with settings(warn_only=True):
-            result = run('python manage.py test')
+            result = run('fig run web python app/manage.py test')
         if result.failed and not confirm("Tests failed. Continue anyway?"):
             abort("Aborting at user request.")
 
@@ -34,52 +34,36 @@ def push():
     local("git push")
 
 
-def prepare_deploy():
-    '''Prepare to deploy the site'''
-    test()
-    #commit()
-    #push()
-
-
 def deploy():
     '''Deploy the site.'''
-    prepare_deploy()
-    sync()
-    #pull()
-    syncdb()
+    test()
+    migrate()
     collectstatic()
-
-
-def sync():
-   sudo("rsync --exclude='.git' {0} {1}".format(env.vagrant_folder, env.site_path), user=env.site_user)
-
-
-def pull():
-    with cd(env.site_path):
-        sudo("git pull", user=env.site_user)
+    restart()
 
 
 def uname():
     '''Run uname on the server.'''
-    run('uname -a')
-
-
-def syncdb():
-    '''Sync the database.'''
-    with cd(env.site_path):
-        sudo('python manage.py syncdb --noinput', user=env.site_user)
-
-
-def collectstatic():
-    '''Collect static media.'''
-    with cd(env.site_path):
-        sudo('python manage.py collectstatic --noinput', user=env.site_user)
+    with cd(env.vagrant_folder):
+        run('fig run web uname -a')
 
 
 def up():
     '''Bring up the docker containers using fig'''
     with cd(env.vagrant_folder):
         run('fig up')
+
+
+def collectstatic():
+    '''Collect static media.'''
+    with cd(env.vagrant_folder):
+        run('fig run web python app/manage.py collectstatic --noinput')
+
+
+def syncdb():
+    '''Sync the database.'''
+    with cd(env.vagrant_folder):
+        run('fig run web python app/manage.py syncdb')
 
 
 def migrate():
