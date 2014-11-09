@@ -76,3 +76,26 @@ def restart():
     """Restart the web app"""
     with cd(env.vagrant_folder):
         run('fig restart web')
+
+def manage(command):
+    """Run the passed manage command"""
+    with cd(env.vagrant_folder):
+        run("fig run web python app/manage.py %s" % command)
+
+
+def makemigrations(app):
+    """Run makemigrations on the django app"""
+    with cd(env.vagrant_folder):
+        run("fig run web python app/manage.py makemigrations %s" % app)
+
+
+def startapp(app):
+    """Run manage.py startapp for the passed app"""
+    with cd(env.vagrant_folder):
+        run("fig run web python app/manage.py startapp app/%s" % app)
+
+
+def dshell():
+    """Run manage.py shell"""
+    with cd(env.vagrant_folder):
+        run("fig run web python app/manage.py shell")
