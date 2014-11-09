@@ -10,8 +10,15 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import uwsgi
+from uwsgidecorators import timer
+from django.utils import autoreload
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+@timer(3)
+def change_code_graceful_reload(sig):
+    if autoreload.code_changed():
+        uwsgi.reload()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
