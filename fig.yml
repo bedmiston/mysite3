@@ -10,4 +10,7 @@ web:
     - "80:80"
   links:
     - db
-
+  environment:
+    DJANGO_SECRET_KEY: "l2m12=spld!a^m30@%gkvk*)f*x(wh18v70ch04mpnnt%!-h7t"
+    DJANGO_SETTINGS_MODULE: website.settings.local
+    RACK_ENV: localexit

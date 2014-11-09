@@ -16,7 +16,7 @@ run apt-get update && apt-get install -y nano nginx supervisor \
 && rm -rf /var/lib/apt/lists/* && apt-get autoremove -y && apt-get clean -y
 
 # install uwsgi now because it takes a little while
-run pip install uwsgi
+run pip install uwsgi==2.0.8
 
 # install our code
 add . $CODE
@@ -30,7 +30,7 @@ run ln -s $CODE/nginx-app.conf /etc/nginx/sites-enabled/
 run ln -s $CODE/supervisor-app.conf /etc/supervisor/conf.d/
 
 # run pip install
-run pip install -r $CODE/app/requirements.txt
+run pip install -r $CODE/app/requirements/base.txt
 
 WORKDIR $CODE
 
