@@ -94,6 +94,10 @@ def startapp(app):
     with cd(env.vagrant_folder):
         run("fig run web python app/manage.py startapp app/%s" % app)
 
+def install_requirements():
+    """Installs the pip requirements for the appropriate environment"""
+    with cd(env.vagrant_folder):
+        run("fig run web pip install -y app/requirements/$RACK_ENV.txt")
 
 def dshell():
     """Run manage.py shell"""
