@@ -9,10 +9,10 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from .base import *
 import uwsgi
 from uwsgidecorators import timer
 from django.utils import autoreload
+from .base import *
 
 @timer(3)
 def change_code_graceful_reload(sig):
@@ -31,3 +31,9 @@ TEMPLATE_DEBUG = True
 # INSTALLED_APPS += (
 #     'debug_toolbar',
 # )
+#
+# MIDDLEWARE_CLASSES += (
+#     'debug_toolbar.middleware.DebugToolbarMiddleware',
+# )
+#
+# DEBUG_TOOLBAR_PATCH_SETTINGS = False

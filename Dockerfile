@@ -15,10 +15,15 @@ run groupadd --system $GROUP && useradd --system --gid $GROUP --shell /bin/bash 
 run apt-get update && apt-get install -y nano nginx supervisor \
 && rm -rf /var/lib/apt/lists/* && apt-get autoremove -y && apt-get clean -y
 
+# install uwsgi before we add our code because it takes a while. We don't want to have
+# to do thi step every time we rebuild our docker image when the code is updated.
+run pip install uWSGI==2.0.8
+
 # install our code
 add . $CODE
 run chown -R $USER:$GROUP $CODE
 run chmod -R g+w $CODE
+run chmod u+x $CODE/install_requirements.sh
 
 # setup all the configfiles
 run echo "daemon off;" >> /etc/nginx/nginx.conf
