@@ -21,6 +21,7 @@ var/
 .installed.cfg
 *.egg
 .python_history
+.bash_history
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -46,7 +47,7 @@ coverage.xml
 
 # Django stuff:
 *.log
-app/static/*
+app/assets/*
 
 # Sphinx documentation
 docs/_build/
