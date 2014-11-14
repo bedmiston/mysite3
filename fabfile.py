@@ -49,7 +49,8 @@ def uname():
 
 
 def up():
-    """Bring up the docker containers using fig"""
+    """Bring
+     up the docker containers using fig"""
     with cd(env.vagrant_folder):
         run("fig up -d")
 
@@ -94,6 +95,7 @@ def startapp(app):
     with cd(env.vagrant_folder):
         run("fig run web python app/manage.py startapp app/%s" % app)
 
+
 def install_requirements():
     """Installs the pip requirements for the appropriate environment"""
     with cd(env.vagrant_folder):
@@ -103,3 +105,14 @@ def dshell():
     """Run manage.py shell"""
     with cd(env.vagrant_folder):
         run("fig run web python app/manage.py shell")
+
+
+def runserver():
+    """Run the django development web server"""
+    with cd(env.vagrant_folder):
+        run("docker exec -d vagrant_web_1 python app/manage.py runserver 0.0.0.0:8000")
+
+
+def status():
+    """Check the docker container status"""
+    run("docker ps")
