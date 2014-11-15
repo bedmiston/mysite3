@@ -116,3 +116,8 @@ def runserver():
 def status():
     """Check the docker container status"""
     run("docker ps")
+
+
+def ssh_web():
+    """SSH connect to the web server"""
+    local("ssh -i id_rsa -l root -p 2223 33.33.33.33")

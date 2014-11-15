@@ -49,6 +49,10 @@ add requirements.txt $CODE/requirements.txt
 add requirements $CODE/requirements
 run /env/bin/pip install -r $CODE/requirements.txt
 
+# add our ssh key
+add id_rsa.pub /tmp/id_rsa.pub
+run cat /tmp/id_rsa.pub >> /root/.ssh/authorized_keys && rm -f /tmp/id_rsa.pub
+
 # install our code
 add . $CODE
 run chown -R 9999:9999 $CODE
@@ -67,7 +71,5 @@ run chmod +x /etc/service/nginx/run
 RUN mkdir /etc/service/uwsgi
 ADD uwsgi.sh /etc/service/uwsgi/run
 run chmod +x /etc/service/uwsgi/run
-
-
 
 expose 80
