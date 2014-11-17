@@ -19,11 +19,13 @@ def v():
 
 
 def test():
-    with cd('/vagrant/'):
-        with settings(warn_only=True):
-            result = run('fig run web python app/manage.py test')
-        if result.failed and not confirm("Tests failed. Continue anyway?"):
-            abort("Aborting at user request.")
+    with cd(env.vagrant_folder):
+        run('fig run web /env/bin/python app/manage.py test')
+
+
+def testapp(app):
+    with cd(env.vagrant_folder):
+        run('fig run web /env/bin/python app/manage.py test %s' % app)
 
 
 def commit():
