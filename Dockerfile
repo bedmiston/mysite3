@@ -72,4 +72,5 @@ RUN mkdir /etc/service/uwsgi
 ADD uwsgi.sh /etc/service/uwsgi/run
 run chmod +x /etc/service/uwsgi/run
 
+VOLUME ["/var/log"]
 expose 80

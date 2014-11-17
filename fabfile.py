@@ -49,16 +49,21 @@ def uname():
 
 
 def up():
-    """Bring
-     up the docker containers using fig"""
+    """Bring up the docker containers using fig"""
     with cd(env.vagrant_folder):
         run("fig up -d")
+
+
+def stop():
+    """Stop the docker containers using fig"""
+    with cd(env.vagrant_folder):
+        run("fig stop")
 
 
 def collectstatic():
     """Collect static media."""
     with cd(env.vagrant_folder):
-        run('fig run web python /env/bin/app/manage.py collectstatic --noinput')
+        run('fig run web /env/bin/python app/manage.py collectstatic --noinput')
 
 
 def syncdb():
@@ -78,6 +83,7 @@ def restart():
     with cd(env.vagrant_folder):
         run('fig restart web')
 
+
 def manage(command):
     """Run the passed manage command"""
     with cd(env.vagrant_folder):
@@ -96,10 +102,11 @@ def startapp(app):
         run("fig run web /env/bin/python app/manage.py startapp app/%s" % app)
 
 
-def install_requirements():
+def installrequirements():
     """Installs the pip requirements for the appropriate environment"""
     with cd(env.vagrant_folder):
         run("fig run web /webapps/django/install_requirements.sh")
+
 
 def dshell():
     """Run manage.py shell"""
@@ -118,6 +125,18 @@ def status():
     run("docker ps")
 
 
-def ssh_web():
+def sshweb():
     """SSH connect to the web server"""
     local("ssh -i id_rsa -l root -p 2223 33.33.33.33")
+
+
+def build():
+    """Build the docker images."""
+    with cd(env.vagrant_folder):
+        run("fig build")
+
+
+def figrun(command):
+    """Run the passed fig command"""
+    with cd(env.vagrant_folder):
+        run("fig %s" % command)
