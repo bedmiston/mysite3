@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.views import generic
 
+from django.db.models import Count
 from polls.models import Choice, Question
 
 
@@ -16,9 +17,11 @@ class IndexView(generic.ListView):
         Return the last five published questions (not including those set to be
         published in the future).
         """
-        return Question.objects.filter(
-            pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[:5]
+        return Question.objects.annotate(
+            choice_count=Count('choice')
+            ).filter(
+            pub_date__lte=timezone.now(), choice_count__gte=1
+            ).order_by('-pub_date')[:5]
 
 
 class DetailView(generic.DetailView):
